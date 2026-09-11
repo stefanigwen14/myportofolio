@@ -6,6 +6,7 @@ from main.models import Experience
 def show_main(request):
     context = {
         "name": "Stefani Gwen Rolanda Tumbelaka",
+        "nickname": "Gwen",
         "npm": "2506594263",
         "study_program": "S1 Sistem Informasi",
         "bio": (
@@ -18,6 +19,7 @@ def show_main(request):
 def show_experience(request):
     context = {
         "name": "Stefani Gwen Rolanda Tumbelaka",
+        "nickname": "Gwen",
         "experience_list": Experience.objects.all(),
     }
     return render(request, "experience.html", context)
