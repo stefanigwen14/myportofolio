@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ name }} - Portofolio</title>
+    <title>{{ nickname }} - Portofolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
 <body>
     <header class="site-header">
         <div class="container">
-            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
+            <a href="{% url 'main:show_main' %}" class="brand">{{ nickname }}</a>
             <nav>
                 <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
@@ -30,7 +30,7 @@
                 </div>
                 <div class="hero-photo">
                     <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/gwen.png" alt="Photo of {{ name }}">
+                    <img class="avatar" src="/static/img/gwen.png" alt="Photo of {{ nickname }}">
                 </div>
                 <div class="hero-details">
                     <p class="bio">{{ bio }}</p>
@@ -52,29 +52,25 @@
                 </div>
             </div>
         </section>
-
-        <section class="hero" id="experiences">
+        <section class="hero" id="what-i-do">
             <div class="cards-container">
-                <h1>Experiences</h1>
-                <p>Experiences as a committee member, mostly related to design and academics.</p>
+                <h1>What I Do...</h1>
+                <p>Summary of the stuff that I do and can offer.</p>
                 <div class="cards-row">
                     <div class="cards">
-                        <img class="cards-picture" src="/static/img/betis.jpg" alt="AkPeng Betis Fasilkom UI"> 
-                        <h3> Betis Fasilkom UI </h3>
-                        <h4> Academics & Teaching Staff - LBE</h4>
-                        <a href="https://instagram.com/betisfasilkomui"> <i class="fa fa-instagram"></i></a>
+                        <img class="cards-picture" src="/static/img/design.png" alt="Design & Illustration"> 
+                        <h3> Design & Illustration </h3>
+                        <h4> UI/UX, Graphic Design, Illustration </h4>
                     </div class="cards">
                     <div class="cards">
-                        <img class="cards-picture" src="/static/img/compfest.jpg" alt="Staff UXA COMPFEST 18">
-                        <h3> COMPFEST 18</h3>
-                        <h4> User Experience Academy Staff</h4>
-                        <a href="https://instagram.com/compfest"> <i class="fa fa-instagram"></i></a>
+                        <img class="cards-picture" src="/static/img/academic.png" alt="Tutoring & Academcics">
+                        <h3> Tutoring & Academics </h3>
+                        <h4> UTBK Prep, Related to Maths </h4>
                     </div>
                     <div class="cards">
-                        <img class="cards-picture" src="/static/img/ddp0.jpg" alt="Visual Design Staff & Mentor DDP0">
-                        <h3> DDP0 2026 </h3>
-                        <h4> Visual Design Staff & Mentor</h4>
-                        <a href="https://instagram.com/ddpzero"> <i class="fa fa-instagram"></i></a>
+                        <img class="cards-picture" src="/static/img/programming.png" alt="Programming">
+                        <h3> Programming </h3>
+                        <h4> Python, Java, Web Development</h4> <!-- basic to intermediate... -->
                     </div>
                 </div>
             </div>

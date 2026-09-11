@@ -33,7 +33,11 @@ h1, .brand {
 }
 
 .site-header {
+    background-color: var(--accent);
     border-bottom: 3px solid var(--accent-dark);
+    position: sticky;
+    top: 0;
+    z-index: 2;
 }
 
 .site-header .container {
@@ -184,6 +188,7 @@ h1, .brand {
     color: var(--text-muted);
     font-size: 0.85rem;
     border-top: 3px solid var(--accent-dark);
+    background-color: var(--accent);
 }
 
 @media (max-width: 600px) {
@@ -241,19 +246,7 @@ h1, .brand {
     object-fit: cover;
     max-width: 250px;
     max-height: 250px;
-    border-radius: 12px;
-    border-color: var(--ink);
-    border-width: 2px;
-    border-style: solid;
     margin-bottom: 15px;
-}
-
-.cards a {
-    color: var(--ink);
-}
-
-.cards a:hover {
-    color: var(--ink-hover);
 }
 
 .cards h4 {
@@ -296,13 +289,16 @@ h1, .brand {
 
 .experience-card {
     padding: 1.25rem;
-    background-color: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
+    background-color: var(--accent);
+    border-radius: 12px;
+    border-color: var(--ink);
+    border-width: 2px;
+    border-style: solid;
+    box-shadow: 4px 4px var(--accent-dark);
 }
 
 .experience-category {
-    color: var(--accent-dark);
+    color: var(--ink);
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
