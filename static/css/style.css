@@ -230,6 +230,7 @@ h1, .brand {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    font-family: "Poppins", -apple-system, sans-serif;
     background-color: var(--accent);
     border-radius: 12px;
     border-color: var(--ink);
@@ -262,7 +263,6 @@ h1, .brand {
   gap: 5%;
 }
 
-/* Hanya untuk keperluan Tutorial 2 dan akan disesuaikan nanti */
 .experience-section {
     padding: 4rem 0;
     border-top: 1px solid var(--line);
@@ -284,7 +284,7 @@ h1, .brand {
 .experience-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1rem;
+    gap: 5%;
 }
 
 .experience-card {
@@ -305,17 +305,42 @@ h1, .brand {
 }
 
 .experience-card h2 {
-    margin: 0.5rem 0;
+    margin: 0.5rem, 0;
     font-size: 1.25rem;
+    font-family: "Poppins", -apple-system, sans-serif;
 }
 
 .experience-description,
 .empty-state {
     color: var(--text-muted);
+    margin-top: 0.1rem;
+    padding-bottom: 0.5rem;
 }
 
-.experience-status {
+.experience-status-ongoing {
     margin-top: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 700;
+    display: inline;
+    background-color: rgb(255, 229, 133);
+    border-radius: var(--radius);
+    border-width: 2px;
+    border-color: var(--ink);
+    border-style: solid;
+}
+
+.experience-status-finished {
+    margin-top: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline;
+    background-color: rgb(50, 207, 50);;
+    border-radius: var(--radius);
+    border-width: 2px;
+    border-color: var(--ink);
+    border-style: solid;
 }
