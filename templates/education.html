@@ -23,31 +23,26 @@
     </header>
 
     <main>
-        <section class="models-section" id="experience">
+        <section class="models-section" id="education">
             <div class="container">
-                <p class="section-kicker">A Glimpse Of My Journey So Far...</p>
-                <h1>Experience</h1>
-
+                <p class="section-kicker">Overview Of My Academic Journey...</p>
+                <h1>Education</h1>
                 <div class="models-grid">
-                    {% for experience in experience_list %}
+                    {% for education in education_list %}
                         <article class="models-card">
-                            <span class="experience-category">
-                                {{ experience.get_category_display }}
-                            </span>
-                            <h2>{{ experience.title }}</h2>
-                            <p class="experience-description">
-                                {{ experience.description }}
-                            </p>
-
-                            {% if experience.is_ongoing %}
-                                <p class="experience-status-ongoing">ONGOING</p>
+                            <h2>{{ education.institution }}</h2>
+                            <p class="education-major">{{ education.major }}</p>
+                            {% if education.is_studying %}
+                                <p class="time-period">{{ education.year_started.year }} – Now</p>
                             {% else %}
-                                <p class="experience-status-finished">FINISHED</p>
+                                <p class="time-period">{{ education.year_started.year }} – {{ education.year_graduated.year }}</p>
                             {% endif %}
+                            <p class="education-details">Activities: {{ education.activities }}</p>
+                            <p class="education-details">Achievements: {{ education.achievements }}</p>
                         </article>
                     {% empty %}
                         <p class="empty-state">
-                            No experience added yet.
+                            No education added yet.
                         </p>
                     {% endfor %}
                 </div>
