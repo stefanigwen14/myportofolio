@@ -24,3 +24,19 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+class Education(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    institution = models.CharField(max_length=255)
+    major = models.CharField(max_length=255)
+    year_started = models.DateTimeField(auto_now_add=True)
+    year_graduated = models.DateTimeField(blank=True, null=True)
+    activities = models.TextField(default="-")
+    achievements = models.TextField(default="-")
+
+    def __str__(self):
+        return self.institution
+
+    @property
+    def is_studying(self):
+        return self.year_graduated is None

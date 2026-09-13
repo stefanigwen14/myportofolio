@@ -209,7 +209,7 @@ h1, .brand {
     }
 }
 
-/* Styling untuk cards (Tugas 1) */
+/* Styling untuk cards  */
 
 .cards-container {
     display: flex;
@@ -230,7 +230,6 @@ h1, .brand {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-family: "Poppins", -apple-system, sans-serif;
     background-color: var(--accent);
     border-radius: 12px;
     border-color: var(--ink);
@@ -250,6 +249,10 @@ h1, .brand {
     margin-bottom: 15px;
 }
 
+.cards h2, h3 {
+    font-family: "Poppins", -apple-system, sans-serif;;
+}
+
 .cards h4 {
     font-weight: 400;
 }
@@ -263,7 +266,7 @@ h1, .brand {
   gap: 5%;
 }
 
-.experience-section {
+.models-section {
     padding: 4rem 0;
     border-top: 1px solid var(--line);
 }
@@ -276,18 +279,18 @@ h1, .brand {
     text-transform: uppercase;
 }
 
-.experience-section h1 {
+.models-section h1 {
     margin: 0.4rem 0 1.5rem;
     font-size: 2rem;
 }
 
-.experience-grid {
+.models-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 5%;
 }
 
-.experience-card {
+.models-card {
     padding: 1.25rem;
     background-color: var(--accent);
     border-radius: 12px;
@@ -304,7 +307,7 @@ h1, .brand {
     text-transform: uppercase;
 }
 
-.experience-card h2 {
+.models-card h2 {
     margin: 0.5rem, 0;
     font-size: 1.25rem;
     font-family: "Poppins", -apple-system, sans-serif;
@@ -343,4 +346,13 @@ h1, .brand {
     border-width: 2px;
     border-color: var(--ink);
     border-style: solid;
+}
+
+.education-major {
+    font-style: italic;
+}
+
+.time-period {
+    font-size: 0.85rem;
+    color: var(--text-muted);
 }
