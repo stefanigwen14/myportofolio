@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from main.models import Experience
+from main.models import Education
 
 
 class MainTest(TestCase):
@@ -11,6 +12,11 @@ class MainTest(TestCase):
             title="Asisten Dosen PBP",
             description="Membantu mahasiswa memahami pengembangan web.",
             category="part-time",
+        )
+
+        self.education = Education.objects.create(
+            institution="Universitas Indonesia",
+            major="Sistem Informasi",
         )
 
     def test_main_url_is_accessible(self):
@@ -26,6 +32,7 @@ class MainTest(TestCase):
 
         self.assertEqual(response.status_code, 404)
 
+    # Tests untuk model Experience
     def test_experience_model(self):
         self.assertEqual(str(self.experience), "Asisten Dosen PBP")
         self.assertEqual(self.experience.category, "part-time")
@@ -39,14 +46,14 @@ class MainTest(TestCase):
         self.assertContains(response, self.experience.title)
         self.assertContains(response, self.experience.description)
         self.assertContains(response, "Part-Time")
-        self.assertContains(response, "Sedang berlangsung")
+        self.assertContains(response, "ONGOING")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
 
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
         response = self.client.get(reverse("main:show_experience"))
 
-        self.assertContains(response, "Belum ada pengalaman yang ditambahkan.")
+        self.assertContains(response, "No experience added yet.")
 
     def test_completed_experience(self):
         self.experience.ended_at = timezone.now()
@@ -54,5 +61,41 @@ class MainTest(TestCase):
         response = self.client.get(reverse("main:show_experience"))
 
         self.assertFalse(self.experience.is_ongoing)
-        self.assertContains(response, "Selesai")
-        self.assertNotContains(response, "Sedang berlangsung")
+        self.assertContains(response, "FINISHED")
+        self.assertNotContains(response, "ONGOING")
+
+    # Tests untuk model Education
+    def test_education_model(self):
+        self.assertEqual(str(self.education), "Universitas Indonesia")
+        self.assertEqual(self.education.major, "Sistem Informasi")
+        self.assertTrue(self.education.is_studying)
+        self.assertEqual(self.education.achievements, "-")
+        self.assertEqual(self.education.activities, "-")
+
+    def test_education_page(self):
+        response = self.client.get(reverse("main:show_education"))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "education.html")
+        self.assertContains(response, self.education.institution)
+        self.assertContains(response, self.education.major)
+        self.assertContains(response, "2026")
+        self.assertContains(response, "-")
+        self.assertContains(response, f'href="{reverse("main:show_main")}"')
+
+    def test_empty_education_page(self):
+        Education.objects.all().delete()
+        response = self.client.get(reverse("main:show_education"))
+
+        self.assertContains(response, "No education added yet.")
+
+    def test_completed_education(self):
+        self.education.year_graduated = timezone.now()
+        self.education.save()
+        response = self.client.get(reverse("main:show_education"))
+
+        self.assertFalse(self.education.is_studying)
+        self.assertContains(response, "2026")
+        self.assertNotContains(response, "Now")
+
+    
