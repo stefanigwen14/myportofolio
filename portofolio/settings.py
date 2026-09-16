@@ -153,3 +153,7 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# CSRF Token
+CSRF_TRUSTED_ORIGINS = ["https://https://stefani-gwen-myportofolio.pws.cs.ui.ac.id"]
+
