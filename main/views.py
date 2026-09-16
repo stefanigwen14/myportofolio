@@ -38,12 +38,13 @@ def show_education(request):
         json_response.content.decode("utf-8"),
     )
     education = [edu.object for edu in education]
-    title_query = request.GET.get("title", "").strip()
+    title_query = request.GET.get("institution", "").strip()
 
     context = {
         "name": "Stefani Gwen Rolanda Tumbelaka",
         "nickname": "Gwen",
         "title_query": title_query,
+        "education_list": education,
     }
     return render(request, "education.html", context)
 
