@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>Projects - {{ nickname }}</title>
+{% endblock meta %}
+{% block content %}
+    <main>
+        <section class="models-section" id="experience">
+            <div class="container">
+                <p class="section-kicker">Works I Have Forged...</p>
+                <div class="project-header">
+                    <h1>Projects</h1>
+                    <a href="{% url 'main:create_project' %}"
+                       class="button project-add-button">
+                        <span aria-hidden="true">+</span>
+                        Add Project
+                    </a>
+                </div>
+                <form method="get"
+                      action="{% url 'main:show_projects' %}"
+                      class="project-search">
+                    <input type="search"
+                           name="title"
+                           value="{{ title_query }}"
+                           placeholder="Search by project name..."
+                           class="project-search__input"
+                           aria-label="Search by project name...">
+                    <button type="submit" class="button search-button"><i class="fa fa-search"></i></button>
+                </form>
+                <div class="models-grid project-grid">
+                    {% for project in project_list %}
+                        <article class="models-card">
+                            {% if project.project_image_url %}
+                                <img src="{{ project.project_image_url }}"
+                                     alt="Image of {{ project.title }}"
+                                     class="project-image">
+                            {% endif %}
+                            <h2>{{ project.title }}</h2>
+                            <span class="experience-category">{{ project.tech_stack }}</span>
+                            <p class="experience-description">{{ project.description }}</p>
+                            <div class="project-card-actions">
+                                <div class="project-actions">
+                                    {% if project.project_url %}
+                                        <a href="{{ project.project_url }}" class="button"><i class="fa fa-external-link"></i> View</a>
+                                    {% endif %}
+                                    {% include "components/project_delete_modal.html" with project=project %}
+                                </div>
+                            </div>
+                        </article>
+                    {% empty %}
+                        {% if title_query %}
+                            <p class="empty-state">No project with that name found.</p>
+                        {% else %}
+                            <p class="empty-state">No project has been added yet.</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock content %}
