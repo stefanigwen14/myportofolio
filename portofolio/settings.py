@@ -155,7 +155,7 @@ MAILERS = {
 }
 
 # CSRF Token
-CSRF_TRUSTED_ORIGINS = ["https://https://stefani-gwen-myportofolio.pws.cs.ui.ac.id",
+CSRF_TRUSTED_ORIGINS = ["https://stefani-gwen-myportofolio.pws.cs.ui.ac.id",
                         "http://localhost:8000",
                         ]
 
