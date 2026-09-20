@@ -1,5 +1,5 @@
-from django.forms import ModelForm, TextInput, Textarea, URLInput
-from main.models import Project 
+from django.forms import ChoiceField, ModelForm, TextInput, Textarea, URLInput, Select
+from main.models import Education, Experience, Project, Testimonial
 
 class ProjectForm(ModelForm):
     class Meta:
@@ -49,3 +49,53 @@ class ProjectForm(ModelForm):
                 }
             ),
         }
+
+class TestimonialForm(ModelForm):
+    related_experience = ChoiceField(
+        choices=[],
+        widget=Select(attrs={'class': 'dropdown'})
+    )
+    
+    class Meta:
+        model = Testimonial
+        fields = [
+            "related_experience",
+            "message",
+            "sender",
+            "image_url",
+        ]
+
+        labels = {
+            "related_experience": "Related Experience/Project/Education",
+            "message": "Message",
+            "sender": "Sender Name",
+            "image_url": "Image URL",
+        }
+
+        widgets = {
+            "message": Textarea(
+                attrs={
+                    "placeholder": "Leave a message here...",
+                    "rows": 3,
+                }
+            ),
+            "sender": TextInput(
+                attrs={
+                    "placeholder": "Enter your name/initial/anonymous here...",
+                    "maxlength": 30,
+                }
+            ),
+            "image_url": URLInput(
+                attrs={
+                    "placeholder": "Insert Google Drive link for related image...",
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        default_choices = [('Others', 'Others')]
+        experience_choices = [(experience, experience) for experience in Experience.objects.all()]
+        education_choices = [(education, education) for education in Education.objects.all()]
+        project_choices = [(project, project) for project in Project.objects.all()]
+        self.fields['related_experience'].choices = default_choices + experience_choices + education_choices + project_choices

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>Testimonials - {{ nickname }}</title>
+{% endblock meta %}
+{% block content %}
+    <main>
+        <section class="models-section" id="experience">
+            <div class="container">
+                <p class="section-kicker">What they (and you) say about me...</p>
+                <div class="project-header">
+                    <h1>Testimonials</h1>
+                    <a href="{% url 'main:create_testimonial' %}"
+                       class="button project-add-button">
+                       <i class="fa fa-paper-plane-o"></i> Leave a Message
+                    </a>
+                </div>
+                <form method="get"
+                      action="{% url 'main:show_testimonials' %}"
+                      class="testimonial-filter">
+                    <label><input type="checkbox" name="testimonial_category" value="Experience"> Experience</label>
+                    <label><input type="checkbox" name="testimonial_category" value="Education"> Education</label>
+                    <label><input type="checkbox" name="testimonial_category" value="Projects"> Projects</label>
+                    <label><input type="checkbox" name="testimonial_category" value="Others"> Others</label>
+                    <button type="submit" class="button search-button"><i class="fa fa-filter"></i></button>
+                </form>
+                <div class="models-grid project-grid">
+                    {% for testimonial in testimonial_list %}
+                        <article class="models-card">
+                            <span class="testimonial-category">{{ testimonial.related_experience }}</span>
+                            {% if testimonial.image_url %}
+                                <img src="{{ testimonial.image_url }}"
+                                     alt="Related Image"
+                                     class="testimonial-image">
+                            {% endif %}
+                            <p class="testimonial-message">{{ testimonial.message }}</p>
+                            <p class="testimonial-detail"><i class="fa fa-user-circle-o"></i> {{ testimonial.sender }}</p>
+                            <p class="testimonial-detail"><i class="fa fa-clock-o"></i> {{ testimonial.sent }}</p>
+                            <div class="project-card-actions">
+                                <div class="project-actions">
+                                    <a href="{% url 'main:edit_testimonial' testimonial.id %}"
+                                    class="button project-add-button">
+                                        <span aria-hidden="true"><i class="fa fa-edit"></i></span>
+                                        Edit
+                                    </a>
+                                    {% include "components/testimonial_delete_modal.html" with testimonial=testimonial %}
+                                </div>
+                            </div>
+                        </article>
+                    {% empty %}
+                        {% if category_query %}
+                            <p class="empty-state">No testimonial with the category has been added yet.</p>
+                        {% else %}
+                            <p class="empty-state">No testimonial has been added yet.</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock content %}

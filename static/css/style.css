@@ -287,7 +287,8 @@ h1, .brand {
 .models-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 5%;
+    column-gap: 5%;
+    row-gap: 1.5rem;
 }
 
 .models-card {
@@ -584,7 +585,8 @@ h1, .brand {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.dropdown {
     width: 100%;
     box-sizing: border-box;
     padding: 0.7rem;
@@ -598,7 +600,8 @@ h1, .brand {
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.dropdown {
     outline: 2px solid var(--accent-dark);
     border-color: var(--accent-dark);
 }
@@ -657,4 +660,55 @@ h1, .brand {
 .button-secondary {
     margin-left: 0.5rem;
     background-color: var(--text-muted);
+}
+
+.testimonial-category {
+    margin: 1rem 0 0 0;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    background-color: var(--accent-dark);
+    border-radius: 8px;
+    border-width: 2px;
+    border-color: var(--ink);
+    border-style: solid;
+}
+
+.testimonial-message {
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.testimonial-detail {
+    font-style: italic;
+}
+
+.testimonial-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    align-items: center;
+    background-color: var(--accent);
+    border-radius: 12px;
+    border-color: var(--ink);
+    border-width: 2px;
+    border-style: solid;
+    box-shadow: 4px 4px var(--accent-dark);
+}
+
+.testimonial-filter button {
+    margin-left: auto;
+}
+
+.testimonial-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    margin-top: 0.5rem;
 }
