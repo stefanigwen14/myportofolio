@@ -52,3 +52,12 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+
+class Testimonial(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sent = models.DateTimeField(auto_now_add=True)
+    related_experience = models.CharField(max_length=255)
+    message = models.TextField()
+    sender = models.CharField(max_length=30, default="Anonymous")
+    image_url = models.URLField(blank=True, max_length=500)
+

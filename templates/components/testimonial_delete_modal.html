@@ -1,0 +1,42 @@
+<p class="experience-status">
+    <button type="button"
+            class="button button-danger"
+            popovertarget="delete-testimonial-{{ testimonial.id }}"
+            aria-label="Delete Testimonial"
+            title="Delete Testimonial">
+        <i class="fa fa-remove"></i> Delete
+    </button>
+</p>
+<div id="delete-testimonial-{{ testimonial.id }}"
+     class="project-delete-modal"
+     popover="auto"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="delete-testimonial-{{ testimonial.id }}">
+    <button type="button"
+            class="project-delete-modal__backdrop"
+            popovertarget="delete-testimonial-{{ testimonial.id }}"
+            popovertargetaction="hide"
+            aria-label="Close delete confirmation"></button>
+    <div class="project-delete-modal__content">
+        <button type="button"
+                class="project-delete-modal__close"
+                popovertarget="delete-testimonial-{{ testimonial.id }}"
+                popovertargetaction="hide"
+                aria-label="Close delete confirmation">×</button>
+        <h2 id="delete-testimonial{{ testimonial.id }}">Delete Testimonial?</h2>
+        <p>
+            Are you sure you want to delete this testimonial?
+        </p>
+        <div class="project-delete-modal__actions">
+            <button type="button"
+                    class="button button-secondary"
+                    popovertarget="delete-testimonial-{{ testimonial.id }}"
+                    popovertargetaction="hide">Cancel</button>
+            <form method="post" action="{% url 'main:delete_testimonial' testimonial.id %}">
+                {% csrf_token %}
+                <button type="submit" class="button button-danger">Yes, Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
