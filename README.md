@@ -1,5 +1,7 @@
 Nama	: Stefani Gwen Rolanda Tumbelaka
-NPM     : 2506594263
+
+NPM   : 2506594263
+
 Kelas	: PBP C
 
 # Tugas 1
@@ -22,3 +24,7 @@ Kelas	: PBP C
 Log chat: https://share.gemini.google/7ZQ3TCVWDWgs
 https://claude.ai/share/c51d715d-aaf5-40f9-9e40-7f8ff618272c
 
+# Tugas 4
+Pada tugas kali ini, saya mengimplementasikan fitur Hearts untuk data Testimonials saya (sebagai pengganti star). Saya menerapkan peran editor hanya bisa melakukan edit pada projects dan testimonial.
+- AI Disclosure: untuk tugas 4 ini, saya menggunakan AI Claude secara langsung pada bagian membuat navbar yang responsif untuk layar yang lebih kecil karena penambahan autentikasi sangat memakan tempat dalam navbar sehingga terlihat tidak rapih dalam layar yang lebih kecil. Saya juga bertanya kepada Claude bagaimana melakukan if-else untuk menyembunyikan komponen pada template HTML karena is_editor tidak berfungsi bagi saya. Untuk prompting, saya meminta Claude untuk menunjukkan contoh kode implementasi yang ingin saya implementasikan. Ada beberapa bagian yang saya copy langsung seperti penerapan hamburger menu, akan tetapi saya sesuaikan dengan kode yang sudah ada sebelumnya dan saya lakukan styling sendiri CSS-nya supaya lebih sesuai dengan tampilan web saya.
+Log chat: https://claude.ai/share/c557217e-13c5-4403-93f6-a3770118ec09
