@@ -611,6 +611,7 @@ h1, .brand {
 
 .form-group {
     margin-bottom: 1.25rem;
+    align-items: center;
 }
 
 .form-group label {
@@ -641,10 +642,20 @@ h1, .brand {
     border-color: var(--accent-dark);
 }
 
+.form-help {
+    font-style: italic;
+}
+
 .form-error {
     color: #b42318;
     font-size: 0.85rem;
     margin-top: 0.35rem;
+}
+
+.instruction-text {
+    color: var(--ink-hover);
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .button {
