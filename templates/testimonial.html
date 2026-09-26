@@ -9,10 +9,12 @@
                 <p class="section-kicker">What they (and you) say about me...</p>
                 <div class="project-header">
                     <h1>Testimonials</h1>
-                    <a href="{% url 'main:create_testimonial' %}"
-                       class="button project-add-button">
-                       <i class="fa fa-paper-plane-o"></i> Leave a Message
-                    </a>
+                    {% if request.user.groups.all.0.name == "Editor" or user.is_superuser %}
+                        <a href="{% url 'main:create_testimonial' %}"
+                        class="button project-add-button">
+                        <i class="fa fa-paper-plane-o"></i> Leave a Message
+                        </a>
+                    {% endif %}
                 </div>
                 <form method="get"
                       action="{% url 'main:show_testimonials' %}"
@@ -37,12 +39,17 @@
                             <p class="testimonial-detail"><i class="fa fa-clock-o"></i> {{ testimonial.sent }}</p>
                             <div class="project-card-actions">
                                 <div class="project-actions">
+                                    {% include "components/testimonial_heart.html" with testimonial=testimonial %}
+                                    {% if request.user.groups.all.0.name == "Editor" or user.is_superuser %}
                                     <a href="{% url 'main:edit_testimonial' testimonial.id %}"
                                     class="button project-add-button">
                                         <span aria-hidden="true"><i class="fa fa-edit"></i></span>
                                         Edit
                                     </a>
-                                    {% include "components/testimonial_delete_modal.html" with testimonial=testimonial %}
+                                    {% endif %}
+                                    {% if user.is_superuser %}
+                                        {% include "components/testimonial_delete_modal.html" with testimonial=testimonial %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </article>

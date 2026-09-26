@@ -64,5 +64,8 @@ class Testimonial(models.Model):
     message = models.TextField()
     sender = models.CharField(max_length=30, default="Anonymous")
     image_url = models.URLField(blank=True, max_length=500)
+    hearted_by = models.ManyToManyField(
+        User, related_name="hearted_testimonials", blank=True
+    )
 
 

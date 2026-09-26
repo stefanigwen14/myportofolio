@@ -25,10 +25,12 @@
                             <dt>Program</dt>
                             <dd>{{ study_program }}</dd>
                         </div>
-                        <div class="meta-row">
-                            <dt>Last Login Session</dt>
-                            <dd>{{ last_login }}</dd>
-                        </div>
+                        {% if user.is_authenticated %}
+                            <div class="meta-row">
+                                <dt>Last Login Session</dt>
+                                <dd>{{ last_login }}</dd>
+                            </div>
+                        {% endif %}
                     </dl>
                     <div class="social-links">
                         <a href="https://github.com/stefanigwen14" class="social-link"> <i class="fa fa-github"></i> GitHub</a>

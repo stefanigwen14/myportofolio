@@ -115,6 +115,7 @@ def delete_project(request, project_id):
 
     return redirect("main:show_projects")
 
+@login_required(login_url="/login/")
 def create_testimonial(request):
     form = TestimonialForm(request.POST or None)
 
@@ -271,3 +272,13 @@ def toggle_star(request, project_id):
             project.starred_by.add(request.user)
 
     return redirect("main:show_projects")
+
+@login_required(login_url="/login/")
+def toggle_heart(request, testimonial_id):
+    testimonial = get_object_or_404(Testimonial, pk=testimonial_id)
+    if request.method == "POST":
+        if request.user in testimonial.hearted_by.all():
+            testimonial.hearted_by.remove(request.user)
+        else:
+            testimonial.hearted_by.add(request.user)
+    return redirect("main:show_testimonials")
