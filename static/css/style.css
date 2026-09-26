@@ -54,8 +54,9 @@ h1, .brand {
     text-decoration: none;
 }
 
-.site-header nav {
+.site-header nav, .nav-links {
     display: flex;
+    align-items: center;
     gap: 2rem;
 }
 
@@ -72,6 +73,19 @@ h1, .brand {
     text-decoration: none;
     font-size: 0.95rem;
 }
+
+.nav-user {
+    font-weight: bold;
+}
+
+.menu-toggle { 
+    display: none; 
+
+}
+.hamburger { 
+    display: none; cursor: pointer;
+}
+
 
 .hero {
     padding: 4.5rem 0 5rem;
@@ -207,6 +221,27 @@ h1, .brand {
     .social-links {
         justify-content: flex-start;
     }
+
+    .hamburger { 
+        display: block; 
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 90px;
+        left: 0;
+        padding: 1.5rem;
+        background: var(--accent);
+        border: solid var(--accent-dark) 2px;
+    }
+
+    .menu-toggle:checked ~ .nav-links {
+        display: flex;
+    }
+
 }
 
 /* Styling untuk cards  */
@@ -632,6 +667,7 @@ h1, .brand {
 }
 
 .button-danger {
+    color: var(--paper) !important;
     background: #b42318;
     border-style: solid;
     border-width: 2px;
