@@ -1,0 +1,10 @@
+<form method="post" action="{% url 'main:toggle_heart' testimonial.id %}" class="star-form">
+    {% csrf_token %}
+    <button type="submit"
+            class="button-star{% if user in testimonial.hearted_by.all %} is-hearted{% endif %} button"
+            title="{% if testimonial.hearted_by.all %}Hearted by {{ testimonial.hearted_by.all|join:', ' }}{% else %}Be the first to leave a heart!{% endif %}">
+        <span aria-hidden="true">♡</span>
+        {% if user in testimonial.hearted_by.all %}Hearted!{% else %}Heart{% endif %}
+        <span class="star-count">{{ testimonial.hearted_by.count }}</span>
+    </button>
+</form>

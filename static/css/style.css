@@ -671,6 +671,9 @@ h1, .brand {
     font: inherit;
     font-weight: 700;
     text-decoration: none;
+    border-color: var(--ink);
+    border-width: 2px;
+    border-style: solid;
 }
 
 .button:hover {
@@ -768,11 +771,26 @@ h1, .brand {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    background: var(--ink);
 }
 
 .button-star.is-starred {
-    background: var(--accent);
+    background: rgb(255, 239, 159);
+    color: var(--ink);
+}
+
+.button-star.is-starred {
+    background: rgb(255, 231, 113);
+    color: var(--ink);
+}
+
+.button-star.is-hearted {
+    background: rgb(255, 130, 150);
+    color: var(--ink);
+}
+
+.button-star.is-hearted:hover {
+    background: rgb(255, 98, 124);
+    color: var(--ink);
 }
 
 .star-count {
