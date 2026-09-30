@@ -1,6 +1,6 @@
 from django.urls import path
 
-from main.views import create_project, create_testimonial, delete_project, delete_testimonial, edit_testimonial, get_projects_json, get_testimonials_json, login_user, logout_user, register, show_main, show_experience, show_education, show_projects, show_testimonials, toggle_star, toggle_heart
+from main.views import create_project, create_project_ajax, create_testimonial, delete_project, delete_testimonial, edit_testimonial, get_projects_json, get_testimonials_json, login_user, logout_user, register, show_main, show_experience, show_education, show_projects, show_testimonials, toggle_star, toggle_heart
 
 app_name = "main"
 
@@ -30,4 +30,5 @@ urlpatterns = [
         toggle_heart,
         name="toggle_heart",
     ),
+    path("projects/add-ajax/", create_project_ajax, name="create_project_ajax"),
 ]
