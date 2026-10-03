@@ -14,13 +14,10 @@
                                 class="button project-add-button"
                                 popovertarget="add-project-modal">
                             <span aria-hidden="true">+</span>
-                            Tambah Proyek
+                            Add Project
                         </button>
                     {% endif %}                 
                 </div>
-                <button class="button button-secondary" onclick="showToast('Notifikasi Sistem', 'Project berhasil dimuat dengan baik!', 'success')">
-                    Test Toast Notifikasi
-                </button>
                 <form method="get"
                       id="project-search-form"
                       action="{% url 'main:show_projects' %}"
@@ -37,17 +34,17 @@
 
                 <!-- Loading State -->
                 <div id="loading" class="empty-state hide">
-                    <p>Memuat projects...</p>
+                    <p>Loading projects... 三三(ง ˙o˙)ว</p>
                 </div>
 
                 <!-- Error State -->
                 <div id="error" class="empty-state hide">
-                    <p>Gagal memuat data projects. Silakan coba lagi.</p>
+                    <p>Failed to load projects. Please try again ૮(˶ㅠ︿ㅠ)ა</p>
                 </div>
 
                 <!-- Empty State -->
                 <div id="empty" class="empty-state hide">
-                    <p>Belum ada proyek yang ditambahkan atau ditemukan.</p>
+                    <p>No projects added or found.</p>
                 </div>
 
                 <!-- Project Grid -->
@@ -105,11 +102,11 @@
         articleElement.className = 'models-card';
 
         const imageHtml = project.project_image_url
-            ? `<img src="${escapeHtml(project.project_image_url)}" alt="Gambar ${escapeHtml(project.title)}" class="project-image">`
+            ? `<img src="${escapeHtml(project.project_image_url)}" alt="Picture of ${escapeHtml(project.title)}" class="project-image">`
             : '';
 
         const urlHtml = project.project_url
-            ? `<a href="${escapeHtml(project.project_url)}" class="button">Lihat Project</a>`
+            ? `<a href="${escapeHtml(project.project_url)}" class="button">View Project</a>`
             : '';
 
         
@@ -123,15 +120,15 @@
         const deleteHtml = IS_SUPERUSER 
             ? `<form method="post" action="${deleteUrl}" style="display:inline;">
                 {% csrf_token %}
-                <button type="submit" class="button button-danger" onclick="return confirm('Yakin ingin menghapus project ini?');">Hapus</button>
+                <button type="submit" class="button button-danger" onclick="return confirm('Are you sure you want to delete this project?');">Delete</button>
             </form>`
             : '';
 
         const isStarredClass = project.is_starred ? " is-starred" : "";
         const starText = project.is_starred ? "Unstar" : "Star";
         const starTitle = project.star_count > 0
-            ? `Dibintangi oleh ${escapeHtml(project.starred_by_names)}`
-            : "Jadilah yang pertama memberi star";
+            ? `Starred by ${escapeHtml(project.starred_by_names)}`
+            : "Be the first to leave a star ☆";
 
         // Komponen card
         const completeCardHtml = `
@@ -259,17 +256,17 @@
             if (response.ok) {
                 projectForm.reset();
                 closeProjectModal();
-                showToast('Berhasil', 'Proyek baru berhasil ditambahkan!', 'success');
+                showToast('Success!', 'New project succesfully added! ( ˶ˆᗜˆ˵ )', 'success');
                 fetchProjects(searchInput.value.trim());
             } else {
                 const errorMessages = result.errors
                     ? Object.values(result.errors).flat().map(error => error.message)
-                    : [result.message || `Terjadi kesalahan (status ${response.status}).`];
-                showToast('Gagal menambahkan proyek', errorMessages.join(' '), 'error');
+                    : [result.message || `Error occurred: (status ${response.status}).`];
+                showToast('Failed to add project', errorMessages.join(' '), 'error');
             }
         } catch (error) {
             console.error('Error adding project:', error);
-            showToast('Gagal menambahkan proyek', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
+            showToast('Failed to add project', 'Can\'t connect to the server. Please try again', 'error');
         } finally {
             submitButton.disabled = false;
         }
