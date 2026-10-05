@@ -19,16 +19,6 @@
                     {% endif %}
                 </div>
                 <form method="get"
-                      action="{% url 'main:show_testimonials' %}"
-                      class="testimonial-filter"
-                      id="testimonial-filter">
-                    <label><input type="checkbox" name="testimonial_category" value="Experience"> Experience</label>
-                    <label><input type="checkbox" name="testimonial_category" value="Education"> Education</label>
-                    <label><input type="checkbox" name="testimonial_category" value="Projects"> Projects</label>
-                    <label><input type="checkbox" name="testimonial_category" value="Others"> Others</label>
-                    <button type="submit" class="button search-button"><i class="fa fa-filter"></i></button>
-                </form>
-                <form method="get"
                       id="testimonial-search-form"
                       action="{% url 'main:show_testimonials' %}"
                       class="project-search">
@@ -71,12 +61,12 @@
     {% endif %}
 
     <script>
-    // Konfigurasi
 
+    // Konfigurasi
     const BASE_TESTIMONIALS_ENDPOINT = "{% url 'main:get_testimonials_json' %}";
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
     let testimonialsAbortController;
-    let currendEditUrl = null;
+    let currentEditUrl = null;
 
     // Elemen DOM
     const loadingState = document.getElementById('loading');
@@ -85,7 +75,6 @@
     const gridContainer = document.getElementById('grid');
     const searchForm = document.getElementById('testimonial-search-form');
     const searchInput = document.getElementById('search-input');
-    const filterInput = document.getElementById("testimonial-filter")
     const SEARCH_DEBOUNCE_DELAY = 300;
     let searchDebounceTimer;
 
@@ -232,10 +221,6 @@
         fetchTestimonials(searchInput.value.trim());
     }
 
-    // Event Handlers untuk filter
-    function filterTestimonials() {
-        fetchTestimonials();
-    }
 
     searchInput.addEventListener("input", function() {
         clearTimeout(searchDebounceTimer);

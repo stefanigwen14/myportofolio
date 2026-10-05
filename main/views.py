@@ -153,26 +153,11 @@ def show_testimonials(request):
     return render(request, "testimonial.html", context)
 
 def get_testimonials_json(request):
-    category_query = request.GET.getlist("testimonial_category")
     title_query = request.GET.get("title", "").strip()
     testimonials = Testimonial.objects.prefetch_related('hearted_by').all()
 
     if title_query:
         testimonials = testimonials.filter(message__icontains=title_query)
-
-    categories = []
-    if category_query:
-        # checking which categories are in the query
-        if "Education" in category_query:
-            categories.extend(list(Education.objects.values_list("institution", flat=True)))
-        if "Experience" in category_query:
-            categories.extend(list(Experience.objects.values_list("title", flat=True)))
-        if "Projects" in category_query:
-            categories.extend(list(Project.objects.values_list("title", flat=True)))
-        if "Others" in category_query:
-            categories.extend(["Others", "others"])
-        # filtered if the relevant_experience is in the categories that are in the query
-        testimonials = testimonials.filter(related_experience__in=categories)
 
     data = []
     for testimonial in testimonials:
