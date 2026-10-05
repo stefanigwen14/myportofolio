@@ -10,58 +10,314 @@
                 <div class="project-header">
                     <h1>Testimonials</h1>
                     {% if request.user.groups.all.0.name == "Editor" or user.is_superuser %}
-                        <a href="{% url 'main:create_testimonial' %}"
-                        class="button project-add-button">
-                        <i class="fa fa-paper-plane-o"></i> Leave a Message
-                        </a>
+                        <button type="button"
+                                class="button project-add-button"
+                                popovertarget="add-testimonial-modal">
+                            <i class="fa fa-paper-plane-o"></i>
+                            Leave a Message
+                        </button>
                     {% endif %}
                 </div>
                 <form method="get"
                       action="{% url 'main:show_testimonials' %}"
-                      class="testimonial-filter">
+                      class="testimonial-filter"
+                      id="testimonial-filter">
                     <label><input type="checkbox" name="testimonial_category" value="Experience"> Experience</label>
                     <label><input type="checkbox" name="testimonial_category" value="Education"> Education</label>
                     <label><input type="checkbox" name="testimonial_category" value="Projects"> Projects</label>
                     <label><input type="checkbox" name="testimonial_category" value="Others"> Others</label>
                     <button type="submit" class="button search-button"><i class="fa fa-filter"></i></button>
                 </form>
-                <div class="models-grid project-grid">
-                    {% for testimonial in testimonial_list %}
-                        <article class="models-card">
-                            <span class="testimonial-category">{{ testimonial.related_experience }}</span>
-                            {% if testimonial.image_url %}
-                                <img src="{{ testimonial.image_url }}"
-                                     alt="Related Image"
-                                     class="testimonial-image">
-                            {% endif %}
-                            <p class="testimonial-message">{{ testimonial.message }}</p>
-                            <p class="testimonial-detail"><i class="fa fa-user-circle-o"></i> {{ testimonial.sender }}</p>
-                            <p class="testimonial-detail"><i class="fa fa-clock-o"></i> {{ testimonial.sent }}</p>
-                            <div class="project-card-actions">
-                                <div class="project-actions">
-                                    {% include "components/testimonial_heart.html" with testimonial=testimonial %}
-                                    {% if request.user.groups.all.0.name == "Editor" or user.is_superuser %}
-                                    <a href="{% url 'main:edit_testimonial' testimonial.id %}"
-                                    class="button project-add-button">
-                                        <span aria-hidden="true"><i class="fa fa-edit"></i></span>
-                                        Edit
-                                    </a>
-                                    {% endif %}
-                                    {% if user.is_superuser %}
-                                        {% include "components/testimonial_delete_modal.html" with testimonial=testimonial %}
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </article>
-                    {% empty %}
-                        {% if category_query %}
-                            <p class="empty-state">No testimonial with the category has been added yet.</p>
-                        {% else %}
-                            <p class="empty-state">No testimonial has been added yet.</p>
-                        {% endif %}
-                    {% endfor %}
+                <form method="get"
+                      id="testimonial-search-form"
+                      action="{% url 'main:show_testimonials' %}"
+                      class="project-search">
+                    <input type="search"
+                           id="search-input"
+                           name="title"
+                           value="{{ title_query }}"
+                           placeholder="Search by testimonial keywords..."
+                           class="project-search__input"
+                           aria-label="Search by testimonial keywords...">
+                    <button type="submit" class="button search-button"><i class="fa fa-search"></i></button>
+                </form>
+
+                <!-- Loading State -->
+                <div id="loading" class="empty-state hide">
+                    <p>Loading testimonials... 三三(ง ˙o˙)ว</p>
                 </div>
+
+                <!-- Error State -->
+                <div id="error" class="empty-state hide">
+                    <p>Failed to load testimonials. Please try again ૮(˶ㅠ︿ㅠ)ა</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty" class="empty-state hide">
+                    <p>No testimonials added or found.</p>
+                </div>
+
+                <!-- Testimonial Grid -->
+                <div id="grid" class="models-grid project-grid hide"></div>
+
+                </div>
+                
             </div>
         </section>
     </main>
+
+    {% if request.user.groups.all.0.name == "Editor" or user.is_superuser %}
+        {% include "components/testimonial_form_modal.html" %}
+    {% endif %}
+
+    <script>
+    // Konfigurasi
+
+    const BASE_TESTIMONIALS_ENDPOINT = "{% url 'main:get_testimonials_json' %}";
+    const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+    let testimonialsAbortController;
+    let currendEditUrl = null;
+
+    // Elemen DOM
+    const loadingState = document.getElementById('loading');
+    const errorState = document.getElementById('error');
+    const emptyState = document.getElementById('empty');
+    const gridContainer = document.getElementById('grid');
+    const searchForm = document.getElementById('testimonial-search-form');
+    const searchInput = document.getElementById('search-input');
+    const filterInput = document.getElementById("testimonial-filter")
+    const SEARCH_DEBOUNCE_DELAY = 300;
+    let searchDebounceTimer;
+
+    gridContainer.addEventListener('click', (event) => {
+        const btn = event.target.closest('.edit-btn');
+        if (!btn) return;
+
+        currentEditUrl = btn.dataset.editUrl;
+        testimonialForm.elements['related_experience'].value = btn.dataset.relatedExperience;
+        testimonialForm.elements['message'].value = btn.dataset.message;
+        testimonialForm.elements['sender'].value = btn.dataset.sender;
+        testimonialForm.elements['image_url'].value = btn.dataset.imageUrl;
+
+        document.getElementById('add-testimonial-modal').showPopover();
+    });
+
+    // Menyembunyikan/Menampilkan section halaman
+    function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+        loadingState.classList.toggle('hide', !showLoading);
+        errorState.classList.toggle('hide', !showError);
+        emptyState.classList.toggle('hide', !showEmpty);
+        gridContainer.classList.toggle('hide', !showGrid);
+    }
+
+    // Mengubah karakter khusus HTML menjadi entity agar ditampilkan sebagai teks
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+    }
+
+    // Membuat elemen card testimonial
+    function buildTestimonialCardElement(item) {
+        const testimonial = item.fields;
+        const testimonialId = item.pk;
+
+        const articleElement = document.createElement('article');
+        articleElement.className = 'models-card';
+
+        const imageHtml = testimonial.image_url
+            ? `<img src="${escapeHtml(testimonial.image_url)}" alt="Related Image to Testimonial" class="project-image">`
+            : '';
+        
+        // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
+        const deleteUrl = "{% url 'main:delete_testimonial' '00000000-0000-0000-0000-000000000000' %}"
+            .replace('00000000-0000-0000-0000-000000000000', testimonialId);
+        const editUrl = "{% url 'main:edit_testimonial' '00000000-0000-0000-0000-000000000000' %}"
+            .replace('00000000-0000-0000-0000-000000000000', testimonialId);
+        const heartUrl = "{% url 'main:toggle_heart' '00000000-0000-0000-0000-000000000000' %}"
+            .replace('00000000-0000-0000-0000-000000000000', testimonialId);
+
+        const deleteHtml = IS_SUPERUSER 
+            ? `<form method="post" action="${deleteUrl}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="button button-danger" onclick="return confirm('Are you sure you want to delete this testimonial?');">Delete</button>
+            </form>`
+            : '';
+
+        const editHtml = IS_SUPERUSER
+            ? `<button type="button" class="button edit-btn"
+            data-edit-url="${editUrl}"
+            data-related-experience="${escapeHtml(testimonial.related_experience)}"
+            data-message="${escapeHtml(testimonial.message)}"
+            data-sender="${escapeHtml(testimonial.sender)}"
+            data-image-url="${escapeHtml(testimonial.image_url)}">Edit</button>`
+            : '';
+
+        const isHeartedClass = testimonial.is_hearted ? " is-hearted" : "";
+        const heartText = testimonial.is_hearted ? "Unheart" : "Heart";
+        const heartTitle = testimonial.heart_count > 0
+            ? `Hearted by ${escapeHtml(testimonial.hearted_by_names)}`
+            : "Be the first to leave a heart ♡";
+
+        // Komponen card
+        const completeCardHtml = `
+            <span class="testimonial-category">${escapeHtml(testimonial.related_experience)}</span>
+            ${imageHtml}
+            <p class="testimonial-message">${escapeHtml(testimonial.message)}</p>
+            <p class="testimonial-detail"><i class="fa fa-user-circle-o"></i> ${escapeHtml(testimonial.sender)}</p>
+            <p class="testimonial-detail"><i class="fa fa-clock-o"></i> ${escapeHtml(testimonial.sent)}</p>
+            <div class="project-card-actions">
+                <div class="project-actions">
+                    ${imageHtml}
+                    <form method="post" action="${heartUrl}" class="star-form">
+                        {% csrf_token %}
+                        <button type="submit" 
+                                class="button button-star${isHeartedClass}"
+                                title="${heartTitle}">
+                            <span aria-hidden="true">♡</span>
+                            ${heartText}
+                            <span class="star-count">${testimonial.heart_count}</span>
+                        </button>
+                    </form>
+                    ${editHtml}
+                    ${deleteHtml}
+                </div>
+            </div>
+        `;
+
+        articleElement.innerHTML = completeCardHtml;
+        return articleElement;
+    }
+
+    // Fetch data testimonial
+    async function fetchTestimonials(searchQuery = "") {
+        if (testimonialsAbortController) testimonialsAbortController.abort();
+        testimonialsAbortController = new AbortController();
+
+        try {
+            displayPageSection({ showLoading: true });
+            
+            const url = searchQuery ? `${BASE_TESTIMONIALS_ENDPOINT}?title=${encodeURIComponent(searchQuery)}` : BASE_TESTIMONIALS_ENDPOINT;
+            
+            const response = await fetch(url, {
+                headers: { 'Accept': 'application/json' },
+                signal: testimonialsAbortController.signal,
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch data');
+
+            const testimonialData = await response.json();
+
+            if (testimonialData.length === 0) {
+                displayPageSection({ showEmpty: true });
+            } else {
+                gridContainer.innerHTML = '';
+                testimonialData.forEach(item => {
+                    gridContainer.appendChild(buildTestimonialCardElement(item));
+                });
+                displayPageSection({ showGrid: true });
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') return;
+            console.error('Error loading testimonials:', error);
+            displayPageSection({ showError: true });
+        }
+    }
+
+    // Event Handlers untuk Form Search
+    function searchTestimonials() {
+        fetchTestimonials(searchInput.value.trim());
+    }
+
+    // Event Handlers untuk filter
+    function filterTestimonials() {
+        fetchTestimonials();
+    }
+
+    searchInput.addEventListener("input", function() {
+        clearTimeout(searchDebounceTimer);
+
+        searchDebounceTimer = setTimeout(function() {
+            searchTestimonials();
+        }, SEARCH_DEBOUNCE_DELAY);
+    });
+
+    searchForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        clearTimeout(searchDebounceTimer);
+        searchTestimonials();
+    });
+
+    function closeTestimonialModal() {
+        document.getElementById("add-testimonial-modal").hidePopover();
+    }
+
+    const CREATE_TESTIMONIAL_ENDPOINT = "{% url 'main:create_testimonial_ajax' %}";
+    const testimonialForm = document.getElementById('testimonial-form');
+
+    // Membaca nilai cookie, digunakan untuk mengambil token CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Mengirim data form ke server
+    async function addTestimonial(event) {
+        event.preventDefault();
+        console.log('addTestimonial jalan');
+
+        const url = currentEditUrl || CREATE_TESTIMONIAL_ENDPOINT;
+
+        const submitButton = testimonialForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                body: new FormData(testimonialForm),
+            });
+            const result = await response.json().catch(() => ({}));
+
+            if (response.ok) {
+                currentEditUrl = null;
+                testimonialForm.reset();
+                closeTestimonialModal();
+                showToast('Success!', 'New testimonial succesfully added! ( ˶ˆᗜˆ˵ )', 'success');
+                fetchTestimonials(searchInput.value.trim());
+            } else {
+                const errorMessages = result.errors
+                    ? Object.values(result.errors).flat().map(error => error.message)
+                    : [result.message || `Error occurred: (status ${response.status}).`];
+                showToast('Failed to add testimonial', errorMessages.join(' '), 'error');
+            }
+        } catch (error) {
+            console.error('Error adding testimonial:', error);
+            showToast('Failed to add testimonial', 'Can\'t connect to the server. Please try again', 'error');
+        } finally {
+            submitButton.disabled = false;
+        }
+    }
+
+    if (testimonialForm) {
+        testimonialForm.addEventListener('submit', addTestimonial);
+    }
+    
+    // Start application
+    fetchTestimonials(searchInput.value.trim());
+    </script>
+    
 {% endblock content %}

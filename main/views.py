@@ -148,14 +148,19 @@ def show_testimonials(request):
         "name": "Stefani Gwen Rolanda Tumbelaka",
         "nickname": "Gwen",
         "testimonial_list": Testimonial.objects.all(),
+        "form": TestimonialForm(),
     }
     return render(request, "testimonial.html", context)
 
 def get_testimonials_json(request):
     category_query = request.GET.getlist("testimonial_category")
-    testimonials = Testimonial.objects.all()
-    categories = []
+    title_query = request.GET.get("title", "").strip()
+    testimonials = Testimonial.objects.prefetch_related('hearted_by').all()
 
+    if title_query:
+        testimonials = testimonials.filter(message__icontains=title_query)
+
+    categories = []
     if category_query:
         # checking which categories are in the query
         if "Education" in category_query:
@@ -169,24 +174,38 @@ def get_testimonials_json(request):
         # filtered if the relevant_experience is in the categories that are in the query
         testimonials = testimonials.filter(related_experience__in=categories)
 
-    testimonials_json = serializers.serialize("json", testimonials)
-    return HttpResponse(testimonials_json, content_type="application/json")
+    data = []
+    for testimonial in testimonials:
+        hearted_users = testimonial.hearted_by.all()
+        is_hearted = request.user in hearted_users if request.user.is_authenticated else False
+        hearted_by_names = ", ".join([u.username for u in hearted_users])
+
+        data.append({
+            "pk": str(testimonial.id),
+            "fields": {
+                "related_experience": testimonial.related_experience,
+                "message": testimonial.message,
+                "sender": testimonial.sender,
+                "sent": testimonial.sent,
+                "image_url": testimonial.image_url,
+                "heart_count": hearted_users.count(),
+                "is_hearted": is_hearted,
+                "hearted_by_names": hearted_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 def show_testimonials(request):
-    json_response = get_testimonials_json(request)
-
-    testimonials = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    testimonials = [testimonial.object for testimonial in testimonials]
+    title_query = request.GET.get("message", "").strip()
     category_query = request.GET.getlist("testimonial_category")
 
     context = {
         "name": "Stefani Gwen Rolanda Tumbelaka",
         "nickname": "Gwen",
-        "testimonial_list": testimonials,
         "category_query": category_query,
+        "title_query": title_query,
+        "form": TestimonialForm(),
     }
     return render(request, "testimonial.html", context)
 
@@ -299,7 +318,7 @@ def toggle_heart(request, testimonial_id):
 def create_project_ajax(request):
     if not request.user.is_superuser:
         return JsonResponse(
-            {"message": "Hanya pemilik portofolio yang dapat menambahkan proyek."},
+            {"message": "Only portofolio owner can add a project.."},
             status=403,
         )
 
@@ -307,7 +326,44 @@ def create_project_ajax(request):
     if form.is_valid():
         project = form.save()
         return JsonResponse(
-            {"message": "Proyek berhasil ditambahkan.", "pk": str(project.id)},
+            {"message": "Project successfully added!", "pk": str(project.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@require_POST
+def create_testimonial_ajax(request):
+    if not(request.user.groups.filter(name="Editor").exists() or request.user.is_superuser):
+        return JsonResponse(
+            {"message": "Only allowed users can leave a message. Please contact portofolio owner."},
+            status=403,
+        )
+
+    form = TestimonialForm(request.POST)
+    if form.is_valid():
+        testimonial = form.save()
+        return JsonResponse(
+            {"message": "Testimonial successfully added!", "pk": str(testimonial.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@require_POST
+def edit_testimonial_ajax(request, testimonial_id):
+    if not(request.user.groups.filter(name="Editor").exists() or request.user.is_superuser):
+        return JsonResponse(
+            {"message": "Only allowed users can edit a message. Please contact portofolio owner."},
+            status=403,
+        )
+
+    instance = get_object_or_404(Testimonial, pk=testimonial_id)
+    form = TestimonialForm(request.POST, instance=instance)
+    if form.is_valid():
+        testimonial = form.save()
+        return JsonResponse(
+            {"message": "Testimonial successfully edited!", "pk": str(testimonial.id)},
             status=201,
         )
 
