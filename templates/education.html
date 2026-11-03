@@ -11,7 +11,13 @@
                 <div class="models-grid">
                     {% for education in education_list %}
                         <article class="models-card">
-                            <h2>{{ education.institution }}</h2>
+                            <div class="institution-info">
+                                {% if education.institution_logo %}
+                                    <img src="{{ education.institution_logo }}"
+                                        alt="Logo of {{ education.institution }}">
+                                {% endif %}
+                                <h2>{{ education.institution }}</h2>
+                            </div>
                             <p class="education-major">{{ education.major }}</p>
                             {% if education.is_studying %}
                                 <p class="time-period">{{ education.year_started.year }} – Now</p>

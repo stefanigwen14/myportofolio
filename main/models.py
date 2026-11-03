@@ -30,6 +30,7 @@ class Experience(models.Model):
 class Education(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     institution = models.CharField(max_length=255)
+    institution_logo = models.URLField(blank=True, null=True)
     major = models.CharField(max_length=255)
     year_started = models.DateTimeField(default=timezone.now)
     year_graduated = models.DateTimeField(blank=True, null=True)
