@@ -74,6 +74,13 @@ h1, .brand {
     font-size: 0.95rem;
 }
 
+.site-header nav a:hover {
+    color: var(--ink-hover);
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
 .nav-user {
     font-weight: bold;
 }
@@ -275,12 +282,16 @@ h1, .brand {
     box-shadow: 4px 4px var(--accent-dark);
 }
 
+.cards:hover {
+    scale: 105%;
+}
+
 .cards-picture {
     display: block;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-    max-width: 250px;
-    max-height: 250px;
+    max-width: 150px;
+    max-height: 150px;
     margin-bottom: 15px;
 }
 
@@ -334,6 +345,10 @@ h1, .brand {
     border-width: 2px;
     border-style: solid;
     box-shadow: 4px 4px var(--accent-dark);
+}
+
+.models-card:hover {
+    scale: 105%;
 }
 
 .thumbnail {
