@@ -11,14 +11,14 @@ Project **My Portofolio** merupakan project website portofolio pribadi menggunak
 [🌐 Klik di sini untuk membuka versi deployment](https://stefani-gwen-myportofolio.pws.cs.ui.ac.id/)
 
 # 📝 Daftar Isi
-- 💻 [Penjelasan Fitur](https://github.com/stefanigwen14/myportofolio/edit/main/README.md#-penjelasan-fitur)
-- ⚙️ [Panduan Setup Instalasi Project secara Local](https://github.com/stefanigwen14/myportofolio/edit/main/README.md#%EF%B8%8F-panduan-setup-instalasi-project-secara-local)
-- ❓ [Pertanyaan Refleksi & AI Disclosure](https://github.com/stefanigwen14/myportofolio/edit/main/README.md#tugas-1)
-  * [Tugas 1](https://github.com/stefanigwen14/myportofolio/edit/main/README.md#tugas-1)
-  * [Tugas 2](https://github.com/stefanigwen14/myportofolio/edit/main/README.md#tugas-2)
-  * [Tugas 3](https://github.com/stefanigwen14/myportofolio/edit/main/README.md#tugas-3)
-  * [Tugas 4](https://github.com/stefanigwen14/myportofolio/edit/main/README.md#tugas-4)
-  * [Tugas 5](https://github.com/stefanigwen14/myportofolio/edit/main/README.md#tugas-5)
+- 💻 [Penjelasan Fitur](https://github.com/stefanigwen14/myportofolio#-penjelasan-fitur)
+- ⚙️ [Panduan Setup Instalasi Project secara Local](https://github.com/stefanigwen14/myportofolio#%EF%B8%8F-panduan-setup-instalasi-project-secara-local)
+- ❓ [Pertanyaan Refleksi & AI Disclosure](https://github.com/stefanigwen14/myportofolio#-pertanyaan-refleksi--ai-disclosure)
+  * [Tugas 1](https://github.com/stefanigwen14/myportofolio#tugas-1)
+  * [Tugas 2](https://github.com/stefanigwen14/myportofolio#tugas-2)
+  * [Tugas 3](https://github.com/stefanigwen14/myportofolio#tugas-3)
+  * [Tugas 4](https://github.com/stefanigwen14/myportofolio#tugas-4)
+  * [Tugas 5](https://github.com/stefanigwen14/myportofolio#tugas-5)
   * Tugas 6
 
 # 💻 Penjelasan Fitur
@@ -64,20 +64,21 @@ Semua fitur pada website ini dijalankan pada satu Django app, yaitu `main`. Terd
    python manage.py runserver
    ```
   📜 Referensi (mohon merujuk ke sini lebih lanjut, terutama jika ingin melakukan production): [Tutorial 0 PBP Gasal 2026/2027](https://pbp.cs.ui.ac.id/tutorial/tutorial-0.html#instalasi-django-dan-inisiasi-proyek-django)
-  
-# Tugas 1
+
+# ❓ Pertanyaan Refleksi & AI Disclosure
+## Tugas 1
 1. Iya, saya sudah menggunakan elemen semantik HTML5, yaitu section. Saya menggunakan elemen tersebut untuk menciptakan section baru untuk bagian "Experiences" (mencontoh bagian hero website pada template tutorial 1 yang sudah menggunakan section) supaya terpisahkan dari section lain seperti hero. section membantu saya dalam membuat static web karena bisa memudahkan proses navigasi (UX) ke bagian tertentu tanpa perlu scripting yang jika dilihat dari sisi user seandainya mereka melihat website portofolio saya mereka ingin langsung melihat Experiences saya saja.
 2. Saya menemukan tantangan tata letak ini ketika menyusun elemen p untuk deskripsi di bawah header section saya (dalam cards container). Ketika saya melakukan test seberapa responsive di localhost dan mengecilkan window browser saya (supaya bisa memperkirakan bagaimana tampilannya pada layar yang lebih kecil seperti mobile), saya melihat bahwa teks deskripsinya terlalu mepet dengan ujung kiri-kanan browser. Lalu saya mencoba styling css untuk elemen p pada cards container dengan mengatur marginnya dan sekarang sudah terlihat lebih rapih (ada jarak dengan kiri-kanan browser).
 3. Saya merasa static web murni membatasi saya dalam membuat interaktivitas menyajikan informasi pada portofolio saya secara optimal, seperti dalam menampilkan cards Experience saya. Dalam iterasi selanjutnya, saya ingin membuat foto dalam cards bisa bergerak berupa animasi/slideshow serta container untuk cardsnya bisa digeser (slider) supaya ketika saya menambahkan card baru semuanya tidak memanjang ke samping/bawah.
 - AI Disclosure: untuk tugas 1 ini, saya menggunakan AI Gemini, tetapi hanya dalam bentuk AI overview yang muncul saat melakukan pencarian Google menggunakan keywords seperti properti html/css yang ingin saya buat, dsb. Saya berusaha untuk mengerjakan tugas 1 ini dengan membaca AI overview lalu membuka website sumber AI overview tersebut (seperti W3Schools, dll) dan mencoba trial and error langsung pada kode yang saya tulis dari apa yang sudah saya baca. 
 
-# Tugas 2
+## Tugas 2
 1. Ketika pengguna membuka halaman portofolio baru, Django memetakan URL tersebut ke View melalui urls.py proyek (/portofolio/urls.py) yang menghubungkan aplikasi, dalam hal ini karena sudah ada path("", include("main.urls")) pada urlpatterns di urls.py proyek maka sekarang routing bisa ditangani oleh urls.py milik aplikasi (/main/urls.py). Karena sudah ditangani oleh urls.py aplikasi yang memiliki urlpatterns untuk masing-masing View pada aplikasi, sekarang View tersebut mengambil dan memproses data dari model yang bersesuaian dengan halaman portofolio tsb. View mengirim context yang ada pada model ke template lalu Django mengembalikan HTML yang telah dirender sebagai response sehingga halaman tersebut bisa menampilkan halaman yang sesuai.
 2. Data untuk bagian portofolio baru sebaiknya disimpan pada model supaya ketika diperlukan adanya entry data baru bisa langsung saja dengan mudah ditambahkan melalui perintah pada py manage-py shell. Jika ditulis langsung dalam template, hal ini akan membuat kode pada template HTML semakin panjang (harus diatur satu-satu untuk masing-masing entry data baru), tetapi kalau menggunakan model kode pada template untuk objek model yang ingin ditampilkan hanya perlu ditulis sekali karena sudah dibungkus oleh for loop untuk menampilkan data pada database models dengan susunan template yang sama. Hal ini cukup praktis untuk pemeliharaan dan pengembangan aplikasi untuk ke depannya. 
 3. Fungsi makemigrations hanya membuat berkas (file baru pada /main/migrations/) yang berisi apa saja yang sudah diubah pada file models.py. Supaya perubahan yang tercantum dalam berkas ini bisa dimasukkan ke dalam database lokal, perlu dilakukan fungsi migrate. Contoh perubahan model yang mengharuskan menjalankan kedua perintah tersebut adalah ketika baru saja membuat model baru dan mengubah struktur (seperti field) pada model yang sudah ada. Penambahan object model baru tidak mengharuskan adanya pemanggilan 2 fungsi ini.
 - AI Disclosure: untuk tugas 2 ini, saya menggunakan AI Gemini, tetapi hanya dalam bentuk AI overview yang muncul saat melakukan pencarian Google menggunakan keywords seperti properti html/css yang ingin saya buat, cara menmbuat objek dengan field tertentu untuk models, dsb. Saya berusaha untuk mengerjakan tugas 2 ini dengan membaca AI overview dan jika belum terjawab saya membuka website sumber AI overview tersebut (seperti W3Schools, dll) dan mencoba trial and error langsung pada kode yang saya tulis dari apa yang sudah saya baca.
 
-# Tugas 3
+## Tugas 3
 1. Form HTML manual hanyalah apa yang dirender di browser (client-side construct), sementara ModelForm Django merupakan server-side construct yang sudah terhubung langsung dengan model yang ingin dibuat menggunakan form. Jika kita menggunakan form HTML biasa, maka perlu kode tambahan seperti pada JavaScript untuk melakukan validasi, dsb sehingga menggunakan ModelForm Django akan sangat menghemat waktu. CSRF token diperlukan supaya penyerang aplikasi tidak bisa mengubah request yang awalnya ke server Django menjadi suatu API berbahaya dan mengirimkan data request ke mereka, sehingga CSRF trusted origins perlu mendaftarkan URL website sendiri supaya hanya URL tsb yang dipercaya untuk melakukan request ke server.
 2. JSON lebih digunakan daripada XML karena ukurannya lebih ringkas, parser yang sangat cepat, dan integrasi ke JavaScript di sisi frontend. Hal ini dikarenakan notasi JSON berasal dari sintaks JavaScript. Akan tetapi, semua bahasa pemrograman memiliki built-in untuk membaca dan membuat struktur JSON. Format XML yang masih menggunakan tags/closing tags terlihat lebih "rumit" dibandingkan JSON yang direpresentasikan sebagai dictionary dengan key dan value
 3. Untuk menampilkan data (seperti pada models Project & Testimonial), fungsi show_data (seperti show_projects dan show_testimonials) yang berfungsi untuk menampilkan data pada suatu halaman memanggil fungsi get_data_json(request). get_data_json pada kode saya digunakan untuk melakukan filtering, sehingga membuat suatu queryset dari semua objek data yang ada terlebih dahulu (Model.objects.all()) lalu jika terdapat query yang didapatkan dari request.get.GET (dalam artian sedang terjadi proses search/filter) maka queryset tersebut akan difilter terlebih dahulu. Karena data untuk server perlu dalam format JSON supaya lebih mudah di-parsing, maka queryset tersebut harus di-serialize dalam bentuk JSON sebagai salah satu parameter HttpResponse utk return type get_data_json. Kemudian, HttpResponse tsb di-deserialize supaya bisa di-return untuk rendering pada template.
@@ -86,13 +87,13 @@ Semua fitur pada website ini dijalankan pada satu Django app, yaitu `main`. Terd
 Log chat: [Gemini](https://share.gemini.google/7ZQ3TCVWDWgs)
 [Claude](https://claude.ai/share/c51d715d-aaf5-40f9-9e40-7f8ff618272c)
 
-# Tugas 4
+## Tugas 4
 Pada tugas kali ini, saya mengimplementasikan fitur Hearts untuk data Testimonials saya (sebagai pengganti star). Saya menerapkan peran editor hanya bisa melakukan edit pada projects dan testimonial.
 - AI Disclosure: untuk tugas 4 ini, saya menggunakan AI Claude secara langsung pada bagian membuat navbar yang responsif untuk layar yang lebih kecil karena penambahan autentikasi sangat memakan tempat dalam navbar sehingga terlihat tidak rapih dalam layar yang lebih kecil. Saya juga bertanya kepada Claude bagaimana melakukan if-else untuk menyembunyikan komponen pada template HTML karena is_editor tidak berfungsi bagi saya. Untuk prompting, saya meminta Claude untuk menunjukkan contoh kode implementasi yang ingin saya implementasikan. Ada beberapa bagian yang saya copy langsung seperti penerapan hamburger menu, akan tetapi saya sesuaikan dengan kode yang sudah ada sebelumnya dan saya lakukan styling sendiri CSS-nya supaya lebih sesuai dengan tampilan web saya.
   
 Log chat: [Claude](https://claude.ai/share/c557217e-13c5-4403-93f6-a3770118ec09)
 
-# Tugas 5
+## Tugas 5
 1. Debouncing merupakah Teknik dalam JavaScript yang digunakan untuk menunda sebuah fungsi hingga suatu jeda Waktu berlalu tanpa event baru. Teknik ini penting diterapkan dalam fitur pencarian menggunakan AJAX supaya Ketika user masih mengetik, timer sebelumnya dibatalkan dan dimulai lagi, browser hanya mengirim permintaan setelah user berhenti mengetik sejenak (tidak terlalu banyak permintaan yang dikirim) dan menciptakan pengalaman pengguna yang lebih baik.
 2. Penggunaan await dalam suatu async function untuk melakukan fetch berungsi untuk menunggu Promise selesai diproses sebelum melanjutkan ke baris kode berikutnya sehingga kode asinkron fetch() lebih mudah dibaca tanpa callback yang bersarang. Jika kita tidak menggunakan wait, Promise akan tetap berjalan di belakang layar dan kode berikutnya akan langsung dieksekusi tanpa menunggu hasilnya, sehingga kemungkinan terjadi callback bersarang di console.
 3. XSS (Cross-Site Scripting) adalah jenis serangan yang dilakukan oleh penyerang dengan menyisipkan kode JavaScript pada jenis input mereka sehingga kode tersebut dijalankan sebagai kode yang berfungsi pada browser lain sehingga perlu dilindungi dengan menggunakan escape HTML untuk kode AJAX/JavaScript yang tidak memiliki auto-escaping. Django sudah memiliki auto-escaping sehingga jika terjadi XSS pada template Django sudah langsung terlindungi.
