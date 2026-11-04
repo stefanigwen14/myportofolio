@@ -15,7 +15,11 @@
                             <span class="experience-category">
                                 {{ experience.get_category_display }}
                             </span>
-                            <h2>{{ experience.title }}</h2>
+                            {% if experience.thumbnail %}
+                                <img src="{{ experience.thumbnail }}"
+                                class="thumbnail">
+                            {% endif %}
+                            <h2 class="experiemce-title">{{ experience.title }}</h2>
                             <p class="experience-description">
                                 {{ experience.description }}
                             </p>
