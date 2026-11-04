@@ -1,7 +1,7 @@
 from django.utils.html import strip_tags
 from rest_framework import serializers
 
-from main.models import Project
+from main.models import Project, Testimonial
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -41,3 +41,42 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     def get_starred_by_names(self, obj):
         return ", ".join(user.username for user in obj.starred_by.all())
+
+
+class TestimonialSerializer(serializers.ModelSerializer):
+    heart_count = serializers.SerializerMethodField()
+    is_hearted = serializers.SerializerMethodField()
+    hearted_by_names = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Testimonial
+        fields = [
+            "id", "sent", "related_experience", "message",
+            "sender", "image_url",
+            "heart_count", "is_hearted", "hearted_by_names",
+        ]
+        read_only_fields = ["id"]
+
+    def validate_message(self, value):
+        value = strip_tags(value).strip()
+        if not value:
+            raise serializers.ValidationError("Message cannot be empty.")
+        return value
+
+    def validate_sender(self, value):
+        return strip_tags(value)
+
+    def validate_related_experience(self, value):
+        return strip_tags(value)
+
+    def get_heart_count(self, obj):
+        return obj.hearted_by.count()
+
+    def get_is_hearted(self, obj):
+        request = self.context.get("request")
+        if request is None or not request.user.is_authenticated:
+            return False
+        return request.user in obj.hearted_by.all()
+
+    def get_hearted_by_names(self, obj):
+        return ", ".join(user.username for user in obj.hearted_by.all())
