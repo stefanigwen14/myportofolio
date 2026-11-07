@@ -19,7 +19,7 @@ Project **My Portofolio** merupakan project website portofolio pribadi menggunak
   * [Tugas 3](https://github.com/stefanigwen14/myportofolio#tugas-3)
   * [Tugas 4](https://github.com/stefanigwen14/myportofolio#tugas-4)
   * [Tugas 5](https://github.com/stefanigwen14/myportofolio#tugas-5)
-  * Tugas 6
+  * [Tugas 6](https://github.com/stefanigwen14/myportofolio#tugas-6)
 
 # 💻 Penjelasan Fitur
 Semua fitur pada website ini dijalankan pada satu Django app, yaitu `main`. Terdapat beberapa fitur, yaitu:
@@ -100,3 +100,12 @@ Log chat: [Claude](https://claude.ai/share/c557217e-13c5-4403-93f6-a3770118ec09)
 - AI Disclosure: Untuk tugas 5 ini, saya sangat dibantu dengan penggunaan AI Claude dalam proses debugging terkait mengapa kode saya tidak bekerja ketika saya mengimplementasikan penyesuaian pada kode testimonial dari kode projects yang berasal dari tutorial. Saya memberikan Claude kode yang sudah saya tulis untuk point out kira-kira kesalahan apa yang menyebabkan hasilnya tidak seperti semestinya (dengan melindungi data pribadi saya seperti menghapus kode yang mengandung nama saya) dan ada bagian kode terkait penerapan event listener dsb pada fitur edit yang dibantu generate oleh Claude.
   
 Log Chat: [Claude](https://claude.ai/share/099c2f4b-117a-4aea-9a47-b52c1f18e5ff)
+
+## Tugas 6
+1. REST (_Representational State Transfer_) merupakan gaya arsitektur untuk merancang web API yang diatur dengan protokol HTTP dengan berbagai method seperti POST, GET, PUT, PATCH, DELETE, di mana data diperlakukan sebagai resource, serta klien dan server bertukar representasi data dalam bentuk JSON, bukan Python ataupun baris database. PUT merupakan method untuk memperbarui resource keseluruhan sehingga cocok digunakan apabila ingin mengubah data secara keseluruhan sekaligus (bukan suatu field saja), sementara PATCH memperbarui resource secara parsial sehingga cocok digunakan apabila ingin mengubah data pada suatu field tertentu.
+2. Serializer pada Django REST framework memungkinkan data kompleks seperti queryset ataupun model instance mudah di-render dalam bentuk JSON/XML/content type lainnya. Keuntungannya dibandingkan merakit dictionary secara manual adalah Serializer bisa membuat proses serialisasi menjadi JSON tersebut lebih cepat dan aman sebab memungkinkan validasi data otomatis.
+3. Autentikasi merupakan proses mengenali pengguna, sementara otorisasi merupakan proses menentukan apa yang bisa dilakukan oleh pengguna tersebut. Permission class diperlukan sebagai antisipasi terhadap request yang dikirimkan ke API endpoint secara langsung, sementara menyembunyikan tombol di template hanya menyembunyikan apa yang terlihat di web.
+4. SessionAuthentication menyimpan ID sesi di dalam cookie browser pengguna, sehingga rentan terjadi CSRF sehingga perlu CSRF token untuk melindunginya. force_authenticate memudahkan pengujian permission dengan melakukan bypass proses autentikasi normal, tetapi tidak menguji proses login maupun CSRF.
+- AI Disclosure: Untuk tugas 6 ini, saya dibantu dengan penggunaan AI Claude terutama dalam menyesuaikan kode baru untuk tombol edit testimonial pada kode contoh yang sudah diberikan pada tutorial 7. Saya juga dibantu dengan cara formatting tanggal. Saya juga dibantu dalam logika apa saja yang harus disesuaikan untuk menyediakan data Experience dan Education yang selama ini tidak disajikan dalam bentuk JSON tetapi sekarang disajikan untuk keperluan mobile app nantinya.
+  
+Log Chat: [Claude](https://claude.ai/share/8b24ffca-3ae5-4f24-9cc4-79641f22cc21)
