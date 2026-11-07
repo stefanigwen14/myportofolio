@@ -1,7 +1,7 @@
 from django.utils.html import strip_tags
 from rest_framework import serializers
 
-from main.models import Project, Testimonial
+from main.models import Education, Project, Testimonial
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -80,3 +80,12 @@ class TestimonialSerializer(serializers.ModelSerializer):
 
     def get_hearted_by_names(self, obj):
         return ", ".join(user.username for user in obj.hearted_by.all())
+
+class EducationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Education
+        fields = [
+            "id", "institution", "institution_logo", "major",
+            "year_started", "year_graduated",
+            "activities", "achievements",
+        ]
