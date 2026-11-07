@@ -9,7 +9,7 @@
                 <p class="section-kicker">What they (and you) say about me...</p>
                 <div class="project-header">
                     <h1>Testimonials</h1>
-                    {% if request.user.groups.all.0.name == "Editor" or user.is_superuser %}
+                    {% if user.is_superuser %}
                         <button type="button"
                                 class="button project-add-button"
                                 popovertarget="add-testimonial-modal">
