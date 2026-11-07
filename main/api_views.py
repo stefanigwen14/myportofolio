@@ -7,9 +7,9 @@ from rest_framework.decorators import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from main.models import Project, Testimonial
+from main.models import Education, Project, Testimonial
 from main.permissions import IsPortfolioOwnerOrEditorOrReadOnly, IsPortfolioOwnerOrReadOnly
-from main.serializers import ProjectSerializer, TestimonialSerializer
+from main.serializers import EducationSerializer, ProjectSerializer, TestimonialSerializer
 
 
 @api_view(["GET", "HEAD", "POST"])
@@ -119,4 +119,12 @@ def testimonial_heart(request, testimonial_id):
     else:
         testimonial.hearted_by.add(request.user)
     serializer = TestimonialSerializer(testimonial, context={"request": request})
+    return Response(serializer.data)
+
+@api_view(["GET", "HEAD"])
+def education_list(request):
+    education = Education.objects.order_by("year_graduated")
+    serializer = EducationSerializer(
+        education, many=True, context={"request": request},
+    )
     return Response(serializer.data)
