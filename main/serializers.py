@@ -1,7 +1,7 @@
 from django.utils.html import strip_tags
 from rest_framework import serializers
 
-from main.models import Education, Project, Testimonial
+from main.models import Education, Experience, Project, Testimonial
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -88,4 +88,13 @@ class EducationSerializer(serializers.ModelSerializer):
             "id", "institution", "institution_logo", "major",
             "year_started", "year_graduated",
             "activities", "achievements",
+        ]
+
+class ExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experience
+        fields = [
+            "id", "title", "description", "category",
+            "thumbnail", "started_at",
+            "ended_at",
         ]
