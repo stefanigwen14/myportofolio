@@ -112,11 +112,11 @@
             ? `<button type="button" class="button button-star${project.is_starred ? ' is-starred' : ''}"
                 data-action="star" data-id="${escapeHtml(project.id)}"
                 title="${escapeHtml(project.starred_by_names)}">
-                ${project.is_starred ? 'Unstar' : 'Star'} (${project.star_count})</button>`
+                ☆ ${project.is_starred ? 'Unstar' : 'Star'} (${project.star_count})</button>`
             : `<a href="{% url 'main:login' %}" class="button">☆ Login to star (${project.star_count})</a>`;
         const remove = IS_SUPERUSER
             ? `<button type="button" class="button button-danger" data-action="delete"
-                data-id="${escapeHtml(project.id)}">Delete</button>` : '';
+                data-id="${escapeHtml(project.id)}"><i class="fa fa-remove" style="margin-right: 4px;"></i>Delete</button>` : '';
         article.innerHTML = `${image}<h2>${escapeHtml(project.title)}</h2>
             <span class="models-category">${escapeHtml(project.tech_stack)}</span>
             <p class="experience-description">${escapeHtml(project.description)}</p>
@@ -180,7 +180,7 @@
             await writeProject(BASE_PROJECTS_ENDPOINT, 'POST', payload);
             projectForm.reset();
             document.getElementById('add-project-modal').hidePopover();
-            showToast('Success', 'Project created.', 'success');
+            showToast('Success', 'Project successfully created! (˶ˆᗜˆ˵)', 'success');
             await fetchProjects(searchInput.value.trim());
         } catch (error) {
             showToast('Could not create project', error.message, 'error');
@@ -201,7 +201,7 @@
             const pattern = action === 'star' ? STAR_PROJECT_ENDPOINT : DETAIL_PROJECT_ENDPOINT;
             await writeProject(projectEndpoint(pattern, button.dataset.id),
                 action === 'star' ? 'POST' : 'DELETE');
-            showToast('Success', action === 'star' ? 'Star updated.' : 'Project deleted.', 'success');
+            showToast('Success', action === 'star' ? 'Star updated! ☆' : 'Project deleted.', 'success');
             await fetchProjects(searchInput.value.trim());
         } catch (error) {
             showToast('Request failed', error.message, 'error');

@@ -75,8 +75,10 @@
     const searchForm = document.getElementById('testimonial-search-form');
     const searchInput = document.getElementById('search-input');
     const testimonialForm = document.getElementById('testimonial-form');
+    const testimonialModal = document.getElementById('add-testimonial-modal')
     let testimonialsAbortController;
     let searchDebounceTimer;
+    let currentEditId;
 
     function getCookie(name) {
         const prefix = `${name}=`;
@@ -112,26 +114,22 @@
             ? `<button type="button" class="button button-star${testimonial.is_hearted ? ' is-hearted' : ''}"
                 data-action="heart" data-id="${escapeHtml(testimonial.id)}"
                 title="${escapeHtml(testimonial.hearted_by_names)}">
-                ${testimonial.is_hearted ? 'Unheart' : 'Heart'} (${testimonial.heart_count})</button>`
+                ♡ ${testimonial.is_hearted ? 'Unheart' : 'Heart'} (${testimonial.heart_count})</button>`
             : `<a href="{% url 'main:login' %}" class="button">♡ Login to heart (${testimonial.heart_count})</a>`;
         const remove = IS_SUPERUSER
             ? `<button type="button" class="button button-danger" data-action="delete"
-                data-id="${escapeHtml(testimonial.id)}">Delete</button>` : '';
-        const editUrl = testimonialEndpoint("{% url 'main:edit_testimonial' '00000000-0000-0000-0000-000000000000' %}");
+                data-id="${escapeHtml(testimonial.id)}"><i class="fa fa-remove" style="margin-right: 4px;"></i>Delete</button>` : '';
         const edit = IS_SUPERUSER
             ? `<button type="button" class="button edit-btn"
-            data-edit-url="${editUrl}"
-            data-related-experience="${escapeHtml(testimonial.related_experience)}"
-            data-message="${escapeHtml(testimonial.message)}"
-            data-sender="${escapeHtml(testimonial.sender)}"
-            data-image-url="${escapeHtml(testimonial.image_url)}">Edit</button>`
+            data-action="edit"
+            data-edit-id="${escapeHtml(testimonial.id)}"><i class="fa fa-edit" style="margin-right: 4px;"></i>Edit</button>`
             : '';
 
         article.innerHTML = `<span class="testimonial-category">${escapeHtml(testimonial.related_experience)}</span>
             ${image}
             <p class="testimonial-message">${escapeHtml(testimonial.message)}</p>
             <p class="testimonial-detail"><i class="fa fa-user-circle-o"></i> ${escapeHtml(testimonial.sender)}</p>
-            <p class="testimonial-detail"><i class="fa fa-clock-o"></i> ${escapeHtml(testimonial.sent)}</p>
+            <p class="testimonial-detail"><i class="fa fa-clock-o"></i> ${escapeHtml(new Date(testimonial.sent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }))}</p>
             <div class="project-card-actions">
                 <div class="project-actions">
                     ${heart}
@@ -142,19 +140,20 @@
         return article;
     }
 
+    let testimonials;
     async function fetchTestimonials(searchQuery = '') {
         if (testimonialsAbortController) testimonialsAbortController.abort();
         testimonialsAbortController = new AbortController();
         try {
             displayPageSection({ showLoading: true });
             const url = new URL(BASE_TESTIMONIALS_ENDPOINT, window.location.origin);
-            if (searchQuery) url.searchParams.set('title', searchQuery);
+            if (searchQuery) url.searchParams.set('message', searchQuery);
             const response = await fetch(url, {
                 headers: { Accept: 'application/json' },
                 signal: testimonialsAbortController.signal,
             });
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const testimonials = await response.json();
+            testimonials = await response.json();
             gridContainer.replaceChildren(...testimonials.map(buildTestimonialCardElement));
             displayPageSection({ showGrid: testimonials.length > 0, showEmpty: testimonials.length === 0 });
         } catch (error) {
@@ -185,6 +184,7 @@
         return data;
     }
 
+
     async function addTestimonial(event) {
         event.preventDefault();
         const button = testimonialForm.querySelector('button[type="submit"]');
@@ -194,10 +194,16 @@
             const payload = Object.fromEntries([
                 'related_experience', 'message', 'sender', 'image_url',
             ].map(name => [name, fields.get(name)]));
-            await writeTestimonial(BASE_TESTIMONIALS_ENDPOINT, 'POST', payload);
+            const isEdit = currentEditId != null;
+            const endpoint = isEdit ? testimonialEndpoint(DETAIL_TESTIMONIAL_ENDPOINT, currentEditId) : BASE_TESTIMONIALS_ENDPOINT;
+            const method = isEdit ? "PATCH" : "POST";
+            await writeTestimonial(endpoint, method, payload);
             testimonialForm.reset();
-            document.getElementById('add-testimonial-modal').hidePopover();
-            showToast('Success', 'Testimonial created.', 'success');
+            testimonialModal.hidePopover();
+            showToast('Success',
+            isEdit ? 'Testimonial successfully edited! (˶>⩊<˶)' : 'Testimonial successfully created! (˶ˆᗜˆ˵)',
+            'success');
+            currentEditId = null;
             await fetchTestimonials(searchInput.value.trim());
         } catch (error) {
             showToast('Could not create testimonial.', error.message, 'error');
@@ -208,17 +214,32 @@
 
     if (testimonialForm) testimonialForm.addEventListener('submit', addTestimonial);
 
+    function openEditModal(testimonial) {
+        testimonialForm.reset();
+        const fields = ['related_experience', 'message', 'sender', 'image_url'];
+        for(const name of fields) {
+            testimonialForm.elements[name].value = testimonial[name] ?? '';
+        }
+        currentEditId = testimonial.id;
+        testimonialModal.showPopover();
+    }
+
     gridContainer.addEventListener('click', async function(event) {
         const button = event.target.closest('button[data-action]');
         if (!button || button.disabled) return;
         const action = button.dataset.action;
+        if(action === 'edit') {
+            const testimonial = testimonials.find(t => t.id == button.dataset.editId);
+            if(testimonial) openEditModal(testimonial);
+            return;
+        }
         if (action === 'delete' && !window.confirm('Delete this testimonial?')) return;
         button.disabled = true;
         try {
             const pattern = action === 'heart' ? HEART_TESTIMONIAL_ENDPOINT : DETAIL_TESTIMONIAL_ENDPOINT;
             await writeTestimonial(testimonialEndpoint(pattern, button.dataset.id),
                 action === 'heart' ? 'POST' : 'DELETE');
-            showToast('Success', action === 'heart' ? 'Heart updated.' : 'Testimonial deleted.', 'success');
+            showToast('Success', action === 'heart' ? 'Heart updated! ♡' : 'Testimonial deleted.', 'success');
             await fetchTestimonials(searchInput.value.trim());
         } catch (error) {
             showToast('Request failed', error.message, 'error');

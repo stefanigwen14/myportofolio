@@ -75,7 +75,7 @@ def testimonial_list(request):
         testimonial = Testimonial.objects.prefetch_related("hearted_by").order_by("message", "id")
         message = request.query_params.get("message", "").strip()
         if message:
-            testimonial = testimonial.filter(title__icontains=message)
+            testimonial = testimonial.filter(message__icontains=message)
         serializer = TestimonialSerializer(
             testimonial, many=True, context={"request": request},
         )
