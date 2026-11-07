@@ -7,9 +7,9 @@ from rest_framework.decorators import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from main.models import Education, Project, Testimonial
+from main.models import Education, Experience, Project, Testimonial
 from main.permissions import IsPortfolioOwnerOrEditorOrReadOnly, IsPortfolioOwnerOrReadOnly
-from main.serializers import EducationSerializer, ProjectSerializer, TestimonialSerializer
+from main.serializers import EducationSerializer, ExperienceSerializer, ProjectSerializer, TestimonialSerializer
 
 
 @api_view(["GET", "HEAD", "POST"])
@@ -126,5 +126,13 @@ def education_list(request):
     education = Education.objects.order_by("year_graduated")
     serializer = EducationSerializer(
         education, many=True, context={"request": request},
+    )
+    return Response(serializer.data)
+
+@api_view(["GET", "HEAD"])
+def experience_list(request):
+    experience = Experience.objects.order_by("title")
+    serializer = ExperienceSerializer(
+        experience, many=True, context={"request": request},
     )
     return Response(serializer.data)
